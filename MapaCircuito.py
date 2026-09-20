@@ -412,10 +412,10 @@ import matplotlib as mpl
 mpl.rcParams['animation.embed_limit'] = 50.0 # Aumenta el límite a 50 MB
 
 fig_anim, ax_anim = plt.subplots(figsize=(8, 8))
-ax_anim.plot(x_array, y_array, color='gray', alpha=0.3, lw=4, label='Pista') 
-auto_dot, = ax_anim.plot([], [], 'ro', markersize=8, label='Auto F1')
+ax_anim.plot(x_array, y_array, color='gray', alpha=0.3, lw=4, label='Track') 
+auto_dot, = ax_anim.plot([], [], 'ro', markersize=8, label='Car')
 ax_anim.set_aspect('equal')
-ax_anim.set_title("Simulación en Tiempo Real")
+ax_anim.set_title("Real Time Simulation")
 ax_anim.grid(True)
 ax_anim.legend()
 
@@ -442,15 +442,19 @@ def update(frame):
 # Creamos la animación. Durará exactamente lo que tardó la vuelta en la simulación
 ani = FuncAnimation(fig_anim, update, frames=len(t_visual_array), interval=dt_visual*1000, blit=True)
 
-# # Cerramos la figura base para que VSC no duplique el gráfico estático arriba del video
-# plt.close(fig_anim) 
-# HTML(ani.to_jshtml())
-# Generamos el texto HTML de la animación
+# Save the animation as a gif
+#ani.save('dynamic_animation.gif', writer='pillow', fps=30)
+
+# Cerramos la figura base para que VSC no duplique el gráfico estático arriba del video
+plt.close(fig_anim) 
+HTML(ani.to_jshtml())
+#Generamos el texto HTML de la animación
 html_str = ani.to_jshtml()
 
 # Calculamos el peso en Megabytes (1 caracter de texto normal = 1 byte)
 peso_bytes = len(html_str.encode('utf-8'))
 peso_mb = peso_bytes / (1024 * 1024)
+
 
 print(f"El peso final de la animación HTML es: {peso_mb:.2f} MB")
 
