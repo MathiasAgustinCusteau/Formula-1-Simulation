@@ -1,0 +1,60 @@
+Fase 1: Arquitectura y Geometría 3D (El Entorno)
+El objetivo de esta fase es tener la pista completamente definida matemáticamente antes de poner un auto encima.
+
+Módulo de Ingestión de Datos: Script para conectarse a FastF1, descargar la telemetría posicional de una vuelta rápida y suavizar los datos (splines) para evitar ruidos numéricos.
+
+Fusión de Datos Externos: Sistema para leer tu archivo personalizado de peraltes y fusionarlo con la posición (X, Y, Z) según la distancia recorrida.
+
+Cálculo de Geometría Local: Procesamiento de la pista para obtener en cada punto los vectores tangentes (dirección), normales (curvatura) y binormales (elevación/peralte).
+
+Fase 2: Planta Motriz y Transmisión (El Empuje)
+Definir cómo el auto genera fuerza hacia adelante, abandonando la potencia constante.
+
+Mapeo del Motor: Creación de la curva de torque en función de las revoluciones por minuto (RPM).
+
+Caja de Cambios y Diferencial: Implementación de relaciones de marcha, saltos de revoluciones al cambiar, tiempos muertos de embrague y límite de velocidad por corte de inyección.
+
+Módulo ERS (Base): Lógica simplificada de entrega de potencia eléctrica extra cuando el pedal está a fondo.
+
+Fase 3: Dinámica del Chasis y Aerodinámica (El Cuerpo)
+Convertir el auto de un punto másico a un objeto tridimensional que reacciona a las fuerzas.
+
+Modelo de Bicicleta (2D): Definición del centro de gravedad y la distribución de masa estática entre el eje delantero y trasero.
+
+Suspensión Lineal: Sistema de resortes básico para calcular cuánto se comprime la trompa o la cola en función de las fuerzas que actúan sobre el coche (transferencia de carga por aceleración/frenado y carga aerodinámica).
+
+Mapa Aerodinámico Dinámico: Sistema que toma la compresión de la suspensión (altura y cabeceo) y devuelve coeficientes aerodinámicos (Drag y Downforce) variables para ese instante específico.
+
+Fase 4: Interacción Suelo-Neumático (El Agarre)
+Reemplazar la fricción rígida por un modelo elástico y realista.
+
+Cálculo de Fuerzas Normales Dinámicas: Sumatoria de la gravedad 3D (afectada por elevación y peralte), transferencia de carga y downforce para saber exactamente cuánto peso aplasta a cada eje.
+
+Cinemática del Neumático: Cálculo del Slip Ratio (deslizamiento longitudinal al acelerar/frenar) y Slip Angle (ángulo de deriva al doblar).
+
+Fórmula Mágica (Pacejka): Implementación de las curvas de Pacejka puras para convertir esos deslizamientos en fuerzas de tracción y agarre lateral reales, permitiendo transiciones suaves en el límite de adherencia.
+
+Fase 5: El Oráculo y Piloto Virtual (El Cerebro)
+El sistema que decide qué hacer con los pedales y el volante.
+
+Generación de Perfil de Velocidad (Oráculo 3D): Recálculo de la velocidad límite teórica, pero ahora considerando el peralte, la elevación, el mapa aero dinámico y la curva real de tracción.
+
+Controlador Predictivo: Algoritmo que lee la pista varios metros hacia adelante para empezar a frenar o acelerar.
+
+Suavizado de Pedales y Trail Braking: Lógica para que el piloto no pise a fondo como un interruptor, sino que module el freno al entrar a la curva y el acelerador al salir, jugando con el límite del modelo de Pacejka.
+
+Fase 6: Motor de Simulación (El Integrador)
+Acoplar todos los módulos físicos en el loop principal de tiempo.
+
+Definición del Vector de Estado: Agrupar posición, velocidad, RPM y variables internas en un solo arreglo.
+
+Derivadas del Sistema: Una función maestra que tome el estado actual, consulte al Piloto Virtual, pase por el Motor, Aerodinámica, Suspensión y Neumáticos, y devuelva las aceleraciones resultantes.
+
+Integrador RK4: El motor matemático que avanza el tiempo utilizando la función de derivadas para obtener el próximo estado con alta precisión.
+
+Fase 7: Telemetría y UX (La Interfaz)
+Registro de Datos: Guardado ordenado de todas las variables físicas y decisiones del piloto en cada paso de tiempo.
+
+Dashboards Interactivos: Implementación de bibliotecas interactivas para navegar los gráficos de velocidad, RPM, fuerzas G, uso de pedales y compresión de suspensión.
+
+Visor de Pista: Visualización tridimensional del circuito y la posición del vehículo.
