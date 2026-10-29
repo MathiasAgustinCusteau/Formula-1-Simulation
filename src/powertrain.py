@@ -139,3 +139,15 @@ def mguk_torque(soc, ot_state, alpha, beta, actual_rpm, deploy_map, dt, lap_harv
     return 0.0, 0.0
 
 
+#hacer mguh: plantear compresor, escape y recien ahi maquina de estados mguh y reemplazar los calculos basado en toda la realimentacion y reemplazar la presion en el ICE
+
+def compressor (actual_rpm):
+    vol_eff = 0.95
+
+
+    admission_density = 1 #CAMBIAR VALOR LO PUSE SOLO PARA QUE NO TIRE ERROR
+
+
+    cilinder_volume = 1.6 # [L]. Volume capacity of the 6 cilinders combined
+    intake_volume = cilinder_volume * actual_rpm/120
+    mass_flow = intake_volume * admission_density * vol_eff
